@@ -1,7 +1,8 @@
 ! ===========================================================================
 ! README
 ! ===========================================================================
-! This program solves the wave equation in 1+1 dimensions.
+!Program to solves the Yang-Mills equation on the conformal compactification 
+!of the Anti de Sitter spacetime, spherically symmetric.
 
 !     Copyright (C) 2012  Edison Montoya, eamonto@gmail.com
 
@@ -18,7 +19,7 @@
 !     You should have received a copy of the GNU General Public License
 !     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-! Up to date: 29 Feb 2012					
+! Up to date: 26 Oct 2012					
 
 
 To compile the program execute in the terminal:
@@ -40,7 +41,7 @@ The files into this repository are:
 ! ===========================================================================
 ! main.f90
 ! ===========================================================================
-! Principal program, this program solves the wave equation in 1+1 dimensions.
+! Principal program, this program solves the Yang-Mills equation in 1+1
 
 
 ! ===========================================================================

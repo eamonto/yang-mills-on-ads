@@ -23,26 +23,26 @@
 ! Up to date: 29 Feb 2012					
 
 
-  subroutine sources(phi2,pi2,psi2,x,dx,grid_points)
+  subroutine sources(omega,pi,sigma,x,dx,grid_points)
     
     use mylibrary
 
     implicit none
 
-    type(dynamical_func) phi2,pi2,psi2
+    type(dynamical_func) omega,pi,sigma
     type(extra_func) x,dx   
 
     integer :: grid_points
 
     integer :: i
 
-    phi2%s = pi2%f
+    omega%s = pi%f
 
     do i=1,grid_points-1
 
-       pi2%s(i) = (psi2%f(i+1)-psi2%f(i-1))/(2.0D0*dx%f(i))
+       pi%s(i) = (sigma%f(i+1)-sigma%f(i-1))/(2.0D0*dx%f(i)) - (omega%f(i)**2 -1.0D0)*omega%f(i)/sin(x%f(i))**2
        
-       psi2%s(i) = (pi2%f(i+1)-pi2%f(i-1))/(2.0D0*dx%f(i))
+       sigma%s(i) = (pi%f(i+1)-pi%f(i-1))/(2.0D0*dx%f(i))
 
     enddo
 

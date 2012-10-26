@@ -19,17 +19,17 @@
 !     You should have received a copy of the GNU General Public License
 !     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-! Up to date: 29 Feb 2012					
+! Up to date: 26 Oct 2012					
 
 
-  subroutine boundaries(phi2,pi2,psi2,x,dx,grid_points)
+  subroutine boundaries(omega,pi,sigma,x,dx,grid_points)
 
     use mylibrary
     use param
 
     implicit none
 
-    type(dynamical_func) phi2,pi2,psi2
+    type(dynamical_func) omega,pi,sigma
     type(extra_func)     x,dx   
 
     integer :: grid_points
@@ -38,25 +38,33 @@
 
     if(boundary.eq.1) then
 
-       pi2%s(0)  = 0.0D0
-       psi2%s(0) = 0.0D0
+       der_pi  = (- pi%f(2)+4.0D0* pi%f(1)-3.0D0* pi%f(0))/(2.0D0*dx%f(0))
 
-       pi2%s(grid_points)  = 0.0D0
-       psi2%s(grid_points) = 0.0D0
+       omega%f(0) = 1.0D0
+
+       pi%s(0)  = 0.0D0
+       sigma%s(0) = der_pi
+
+       der_pi  = ( pi%f(grid_points-2)-4.0D0* pi%f(grid_points-1)+3.0D0 *pi%f(grid_points))/(2.0D0*dx%f(grid_points))
+
+       omega%f(grid_points) = 1.0D0
+
+       pi%s(grid_points)  = 0.0D0
+       sigma%s(grid_points) = der_pi
 
     else if(boundary.eq.2) then
 
-       der_pi  = (- pi2%f(2)+4.0D0* pi2%f(1)-3.0D0* pi2%f(0))/(2.0D0*dx%f(0))
-       der_psi = (-psi2%f(2)+4.0D0*psi2%f(1)-3.0D0*psi2%f(0))/(2.0D0*dx%f(0))
+       der_pi  = (- pi%f(2)+4.0D0* pi%f(1)-3.0D0* pi%f(0))/(2.0D0*dx%f(0))
+       der_psi = (-sigma%f(2)+4.0D0*sigma%f(1)-3.0D0*sigma%f(0))/(2.0D0*dx%f(0))
 
-       pi2%s(0)  = (der_pi+der_psi)/2.0D0
-       psi2%s(0) = (der_pi+der_psi)/2.0D0
+       pi%s(0)  = (der_pi+der_psi)/2.0D0
+       sigma%s(0) = (der_pi+der_psi)/2.0D0
 
-       der_pi  = ( pi2%f(grid_points-2)-4.0D0* pi2%f(grid_points-1)+3.0D0 *pi2%f(grid_points))/(2.0D0*dx%f(grid_points))
-       der_psi = (psi2%f(grid_points-2)-4.0D0*psi2%f(grid_points-1)+3.0D0*psi2%f(grid_points))/(2.0D0*dx%f(grid_points))
+       der_pi  = ( pi%f(grid_points-2)-4.0D0* pi%f(grid_points-1)+3.0D0 *pi%f(grid_points))/(2.0D0*dx%f(grid_points))
+       der_psi = (sigma%f(grid_points-2)-4.0D0*sigma%f(grid_points-1)+3.0D0*sigma%f(grid_points))/(2.0D0*dx%f(grid_points))
 
-       pi2%s(grid_points) = -(der_pi-der_psi)/2.0D0
-       psi2%s(grid_points) = (der_pi-der_psi)/2.0D0
+       pi%s(grid_points) = -(der_pi-der_psi)/2.0D0
+       sigma%s(grid_points) = (der_pi-der_psi)/2.0D0
 
     else
 
