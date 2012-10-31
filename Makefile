@@ -8,7 +8,7 @@ MODULESF90  = $(MODULES:=.f90)
 MODULESO    = $(MODULES:=.o)
 
 #ROUTINES
-ROUTINES = boundaries initial_data sources
+ROUTINES = boundaries initial_data sources compute_observables
 ROUTINESF90 = $(ROUTINES:=.f90)
 ROUTINESO   = $(ROUTINES:=.o)
 
