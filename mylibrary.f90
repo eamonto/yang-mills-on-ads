@@ -31,20 +31,29 @@ module mylibrary
 
   !Functions on the grid to be integrated
   type :: dynamical_func
-     real(double), allocatable, dimension (:) :: f !function
-     real(double), allocatable, dimension (:) :: s !source (derivative)
-     real(double), allocatable, dimension (:) :: i !initial (RK4) NO USER
-     real(double), allocatable, dimension (:) :: a !advance (RK4) NO USER
-     character(100) :: name   !name (output)
-     integer :: id            !id   (output)
+     real(double), allocatable, dimension (:) :: f     !function
+     real(double), allocatable, dimension (:) :: s     !source (derivative)
+     real(double), allocatable, dimension (:) :: i     !initial (RK4) NO USER
+     real(double), allocatable, dimension (:) :: a     !advance (RK4) NO USER
+     character(100)                           :: name  !name (output)
+     integer                                  :: id    !id   (output)
   end type  dynamical_func
   
 
   !Extra functions that are not evolve
   type :: extra_func
-     real(double), allocatable, dimension (:) :: f !function
+     real(double), allocatable, dimension (:) :: f     !function
+     character(100)                           :: name  !name (output)
+     integer                                  :: id    !id   (output)
   end type  extra_func
+
   
+  !Scalar function, it does not depend on the grid points
+  type :: scalar_func
+     real(double)   :: f     !function
+     character(100) :: name  !name (output)
+     integer :: id           !id   (output)
+  end type  scalar_func
 
 CONTAINS
 
@@ -154,9 +163,9 @@ CONTAINS
   end subroutine deallocate_extra
 
 
-  !Created the output file for the dynamical functions "func" in  
+  !Created the output file for the dynamical function "func" in  
   !the "output_dir" with name "output_file" and id "file_number"
-  subroutine create_output(func,output_dir,output_file,file_number)
+  subroutine create_output_dyn(func,output_dir,output_file,file_number)
 
     type(dynamical_func) func
     character(len=*) :: output_dir
@@ -171,10 +180,50 @@ CONTAINS
     open (file_number,file=func%name,form='formatted',status='replace')
     close(file_number)
 
-  end subroutine create_output
+  end subroutine create_output_dyn
 
 
-  !Print the output of two scalar functions on the grid
+  !Created the output file for the extra function "func" in  
+  !the "output_dir" with name "output_file" and id "file_number"
+  subroutine create_output_extra(func,output_dir,output_file,file_number)
+
+    type(extra_func) func
+    character(len=*) :: output_dir
+    character(len=*) :: output_file
+    integer :: file_number
+
+    call system('mkdir -p '//trim(output_dir))
+
+    func%name = trim(output_dir)//'/'//trim(output_file)
+    func%id   = file_number
+
+    open (file_number,file=func%name,form='formatted',status='replace')
+    close(file_number)
+
+  end subroutine create_output_extra
+
+
+  !Created the output file for the scalar function "func" in  
+  !the "output_dir" with name "output_file" and id "file_number"
+  subroutine create_output_scalar(func,output_dir,output_file,file_number)
+
+    type(scalar_func) func
+    character(len=*) :: output_dir
+    character(len=*) :: output_file
+    integer :: file_number
+
+    call system('mkdir -p '//trim(output_dir))
+
+    func%name = trim(output_dir)//'/'//trim(output_file)
+    func%id   = file_number
+
+    open (file_number,file=func%name,form='formatted',status='replace')
+    close(file_number)
+
+  end subroutine create_output_scalar
+
+
+  !Print the output of two vector functions
   subroutine output_obs_obs(axis1,axis2,output_file,file_number,Nx)
 
     real(double), DIMENSION(0:Nx) :: axis1,axis2
@@ -198,5 +247,24 @@ CONTAINS
     close(file_number)
 
   end subroutine output_obs_obs
+
+
+  !Print the output of a scalar function
+  subroutine output_obs(time,func)
+
+    real(double) :: time
+    type(scalar_func) func
+
+    real(double) :: eps = 1.0D-15
+
+    open(func%id,file=trim(func%name),form='formatted',status='old',position='append')
+
+    if(abs(func%f).lt.eps) func%f=0.0D0
+
+    write(func%id,"(2ES24.16)") time,func%f
+
+    close(func%id)
+
+  end subroutine output_obs
 
 end module mylibrary
