@@ -19,7 +19,7 @@
 !     You should have received a copy of the GNU General Public License
 !     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-! Up to date: 26 Oct 2012					
+! Up to date: 30 Oct 2012					
 
 
   module param
@@ -28,21 +28,21 @@
 
     implicit none
 
-    !evolution
-    real(double),parameter :: courant = 0.5D0 !Courant factor
-    integer :: Ntime = 1000                     !number of time steps
-    integer :: boundary = 1                    !1=zero 2=eigenvalue
+    character(100), parameter :: output_dir = "test"  !output directory
 
-    character(100) :: output_dir = "test"      !output directory
-    integer :: Nx = 1000                       !Number of points in the grid
+    integer, parameter :: boundary = 1                 !1=zero 2=eigenvalue
 
-    integer :: every_0D = 100                   !time output
-    integer :: every_1D = 100                   !spatial output
+    integer, parameter :: Nx = 1000                    !Number of points in the grid
 
-    real(double),parameter :: dx_aux = 3.14159265359D0/2000.0D0 !dx homogeneous grid
+    real(double), parameter :: courant = 0.5D0         !Courant factor
+    real(double), parameter :: dx_aux = 3.14159265359D0/(2.0D0*Nx) !dx homogeneous
+    real(double), parameter :: dt = courant*dx_aux     !time step
 
-    real(double) :: time =0.0D0                !initial time
+    real(double), parameter :: initial_time =0.0D0     !initial time
+    real(double), parameter :: total_time =1.5D0       !final time
+    integer     , parameter :: Ntime = int(total_time/dt)  !number of time steps
 
-    real(double) :: dt = courant*dx_aux        !time step
+    integer     , parameter :: every_0D = 1            !time output
+    integer     , parameter :: every_1D = int(Ntime/10)!spatial output
 
   end module param

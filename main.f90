@@ -19,7 +19,7 @@
 !     You should have received a copy of the GNU General Public License
 !     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-! Up to date: 26 Oct 2012					
+! Up to date: 30 Oct 2012					
 
 
   program main
@@ -31,8 +31,11 @@
 
     integer :: l,k
 
+    real(double) :: time = initial_time
+
     type(dynamical_func) omega,pi,sigma
     type(extra_func)     x,dx   
+    type(scalar_func)    energy
 
     !Allocation of function that are evolve
     call allocate_dyn(omega,Nx)  !NO USER
@@ -46,16 +49,31 @@
     !Initialization of the functions, including the grid
     call initial_data(omega,pi,sigma,x,dx,Nx)  !USER
 
-    !Created the output file for the dynamical functions "func" in  
-    !the "output_dir" with name "output_file" and id "file_number"
-    call create_output(omega,output_dir,"omega.x",200)     !NO USER
-    call create_output(pi   ,output_dir,"pi.x"   ,201)     !NO USER
-    call create_output(sigma,output_dir,"sigma.x",202)     !NO USER
+    !Compute the energy
+    call compute_observables(energy,omega,pi,sigma,x,dx,Nx) !USER
 
-    !Print the output of two scalar functions on the grid
+    !Created the output file for the dynamical function in  
+    !the "output_dir" with name "output_file" and id "file_number"
+    call create_output_dyn(omega,output_dir,"omega.x",200)     !NO USER
+    call create_output_dyn(pi   ,output_dir,"pi.x"   ,201)     !NO USER
+    call create_output_dyn(sigma,output_dir,"sigma.x",202)     !NO USER
+
+    !Created the output file for the extra function in  
+    !the "output_dir" with name "output_file" and id "file_number"
+    call create_output_extra(dx,output_dir,"dx.x",203)     !NO USER
+
+    !Created the output file for the scalar function in  
+    !the "output_dir" with name "output_file" and id "file_number"
+    call create_output_scalar(energy,output_dir,"energy.t",204)  !NO USER
+
+    !Print the output of two vector functions on the grid
     call output_obs_obs(x%f,omega%f,omega%name,omega%id,Nx) !NO USER
     call output_obs_obs(x%f,pi%f   ,pi%name   ,pi%id   ,Nx) !NO USER
     call output_obs_obs(x%f,sigma%f,sigma%name,sigma%id,Nx) !NO USER
+
+    call output_obs_obs(x%f,dx%f,dx%name,dx%id,Nx) !NO USER
+
+    call output_obs(time,energy) !NO USER
  
     print *,''
     print *,'    Time     '
@@ -88,6 +106,11 @@
 
        if(mod(l,every_0D).eq.0) then
           write(*,"(F12.5)") time
+
+          !Compute the energy
+          call compute_observables(energy,omega,pi,sigma,x,dx,Nx) !USER
+
+          call output_obs(time,energy) !NO USER
        endif
 
        !Print the output of two scalar functions on the grid
