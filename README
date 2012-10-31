@@ -19,7 +19,7 @@
 !     You should have received a copy of the GNU General Public License
 !     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-! Up to date: 26 Oct 2012					
+! Up to date: 30 Oct 2012					
 
 
 To compile the program execute in the terminal:
@@ -70,6 +70,12 @@ The files into this repository are:
 
 
 ! ===========================================================================
+! compute_observables.f90
+! ===========================================================================
+! Compute observables (function define by user, e.g. Energy )
+
+
+! ===========================================================================
 ! mylibrary.f90
 ! ===========================================================================
 ! Library to evolve an arbitry physical system on a 1 dimensional grid using 
@@ -83,6 +89,8 @@ The files into this repository are:
   !Extra functions that are not evolve
   type :: extra_func
 
+  !Scalar function, it does not depend on the grid points
+  type :: scalar_func
 
  The routines in the library are:
 
@@ -104,13 +112,23 @@ The files into this repository are:
   !Allocation of function that are not evolve
   subroutine deallocate_extra(func)
 
-  !Created the output file for the dynamical functions "func" in  
+  !Created the output file for the dynamical function "func" in  
   !the "output_dir" with name "output_file" and id "file_number"
-  subroutine create_output(func,output_dir,output_file,file_number)
+  subroutine create_output_dyn(func,output_dir,output_file,file_number)
+
+  !Created the output file for the extra function "func" in  
+  !the "output_dir" with name "output_file" and id "file_number"
+  subroutine create_output_extra(func,output_dir,output_file,file_number)
+
+  !Created the output file for the scalar function "func" in  
+  !the "output_dir" with name "output_file" and id "file_number"
+  subroutine create_output_scalar(func,output_dir,output_file,file_number)
 
   !Print the output of two scalar functions on the grid
   subroutine output_obs_obs(axis1,axis2,output_file,file_number,Nx)
 
+  !Print the output of a scalar function
+  subroutine output_obs(time,func)
 
 
 
