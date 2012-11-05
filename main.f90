@@ -73,6 +73,7 @@
 
     call output_obs_obs(x%f,dx%f,dx%name,dx%id,Nx) !NO USER
 
+    !Print the output of a scalar function (energy)
     call output_obs(time,energy) !NO USER
  
     print *,''
@@ -110,6 +111,7 @@
           !Compute the energy
           call compute_observables(energy,omega,pi,sigma,x,dx,Nx) !USER
 
+          !Print the energy
           call output_obs(time,energy) !NO USER
        endif
 
