@@ -30,7 +30,7 @@
 
     character(100), parameter :: output_dir = "test"  !output directory
 
-    integer, parameter :: boundary = 1                 !1=zero 2=eigenvalue
+    integer, parameter :: boundary = 1                 !1=Dirichlet
 
     integer, parameter :: Nx = 1000                    !Number of points in the grid
 

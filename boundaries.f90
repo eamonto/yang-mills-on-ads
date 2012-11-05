@@ -34,7 +34,7 @@
 
     integer :: grid_points
 
-    real(double) :: der_pi,der_psi
+    real(double) :: der_pi
 
     if(boundary.eq.1) then
 
@@ -51,20 +51,6 @@
 
        pi%s(grid_points)  = 0.0D0
        sigma%s(grid_points) = der_pi
-
-    else if(boundary.eq.2) then
-
-       der_pi  = (- pi%f(2)+4.0D0* pi%f(1)-3.0D0* pi%f(0))/(2.0D0*dx%f(0))
-       der_psi = (-sigma%f(2)+4.0D0*sigma%f(1)-3.0D0*sigma%f(0))/(2.0D0*dx%f(0))
-
-       pi%s(0)  = (der_pi+der_psi)/2.0D0
-       sigma%s(0) = (der_pi+der_psi)/2.0D0
-
-       der_pi  = ( pi%f(grid_points-2)-4.0D0* pi%f(grid_points-1)+3.0D0 *pi%f(grid_points))/(2.0D0*dx%f(grid_points))
-       der_psi = (sigma%f(grid_points-2)-4.0D0*sigma%f(grid_points-1)+3.0D0*sigma%f(grid_points))/(2.0D0*dx%f(grid_points))
-
-       pi%s(grid_points) = -(der_pi-der_psi)/2.0D0
-       sigma%s(grid_points) = (der_pi-der_psi)/2.0D0
 
     else
 
